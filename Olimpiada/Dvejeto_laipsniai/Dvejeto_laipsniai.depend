@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1611081596 source:c:\users\inesa\desktop\c++\olimpiada\dvejeto_laipsniai\main.cpp
+	<iostream>
+	<vector>
+	<fstream>
+

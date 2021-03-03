@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1607851997 source:c:\users\inesa\desktop\c++\olimpiada\bilietai\main.cpp
+	<iostream>
+	<fstream>
+

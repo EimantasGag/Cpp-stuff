@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1607669658 source:c:\users\inesa\desktop\c++\olimpiada\koncertas\main.cpp
+	<iostream>
+	<fstream>
+

@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1605108616 source:c:\users\inesa\desktop\c++\olimpiada\kortos\main.cpp
+	<iostream>
+	<fstream>
+

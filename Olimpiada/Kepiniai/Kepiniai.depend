@@ -1,0 +1,11 @@
+# depslib dependency file v1.0
+1608311848 source:c:\users\inesa\desktop\c++\miesto etapas\kepiniai\main.cpp
+	<iostream>
+	<fstream>
+
+1608465028 source:c:\users\inesa\desktop\c++\olimpiada\kepiniai\main.cpp
+	<iostream>
+	<fstream>
+	<stdlib.h>
+	<time.h>
+

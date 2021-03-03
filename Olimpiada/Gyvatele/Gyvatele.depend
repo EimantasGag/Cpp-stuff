@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1605506415 source:c:\users\inesa\desktop\c++\olimpiada\gyvatele\main.cpp
+	<iostream>
+	<fstream>
+	<cmath>
+

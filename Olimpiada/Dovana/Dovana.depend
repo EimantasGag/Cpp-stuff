@@ -1,0 +1,6 @@
+# depslib dependency file v1.0
+1607973031 source:c:\users\inesa\desktop\c++\olimpiada\dovana\main.cpp
+	<iostream>
+	<fstream>
+	<cmath>
+

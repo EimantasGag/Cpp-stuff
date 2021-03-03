@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1605779891 source:c:\users\inesa\desktop\c++\olimpiada\keturieileje\main.cpp
+	<iostream>
+	<fstream>
+

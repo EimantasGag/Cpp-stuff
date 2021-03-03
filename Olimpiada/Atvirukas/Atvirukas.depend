@@ -1,0 +1,5 @@
+# depslib dependency file v1.0
+1609945289 source:c:\users\inesa\desktop\c++\olimpiada\atvirukas\main.cpp
+	<iostream>
+	<fstream>
+
