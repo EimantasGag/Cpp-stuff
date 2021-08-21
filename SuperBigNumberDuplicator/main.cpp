@@ -182,8 +182,8 @@ string dup_big_int(string num1, string num2)
 
     }
 
-    cout << "dal_res: " << dal_res << endl;
-    cout << "arr_size: " << arr_size << endl;
+    //cout << "dal_res: " << dal_res << endl;
+    //cout << "arr_size: " << arr_size << endl;
 
     if(arr_size > 1 && dal_res == ""){
         res = dup_sum_big_int(all_res,arr_size);
@@ -206,19 +206,37 @@ string dup_big_int(string num1, string num2)
 
 string random_number(int number_of_char)
 {
-    srand (time(NULL));
-
     string res = "";
 
     int rand_num;
+    int ind = 0;
 
     while(number_of_char > 0){
         rand_num = rand() % 10;
-        res += char(rand_num + '0');
-        number_of_char--;
+
+        if(rand_num == 0 && ind == 0){
+            continue;
+        }
+        else{
+            res += char(rand_num + '0');
+            number_of_char--;
+            ind++;
+        }
     }
 
     return res;
+}
+
+int toInt(string string_num){
+    int num = 0;
+    int dup = pow(10,string_num.length()-1);
+
+    for(int i = 0;i<string_num.length();i++){
+        num += (string_num[i] - '0') * dup;
+        dup /= 10;
+    }
+
+    return num;
 }
 
 int main()
@@ -236,25 +254,41 @@ int main()
 
     char ats;
 
-    cout << "Ar norite, kad kompiuteris sugeneruotu automatiskai skaicius? (T/N): "; cin >> ats;
+    srand (time(NULL));
 
-    if(ats == 'T'){
-        int dydis;
-        cout << "Iveskite dydi skaiciu, kurie bus sugeneruoti: "; cin >> dydis;
-        num1 = random_number(dydis);
-        num2 = random_number(dydis);
-        cout << "Pirmas skaicius: " << num1 << endl;
-        cout << "Antras skaicius: " << num2 << endl;
-        cout << endl;
+    // cout << "Ar norite, kad kompiuteris sugeneruotu automatiskai skaicius? (T/N): "; cin >> ats;
+
+    // if(ats == 'T'){
+    //     int dydis;
+    //     cout << "Iveskite dydi skaiciu, kurie bus sugeneruoti: "; cin >> dydis;
+    //     num1 = random_number(dydis);
+    //     num2 = random_number(dydis);
+    //     cout << "Pirmas skaicius: " << num1 << endl;
+    //     cout << "Antras skaicius: " << num2 << endl;
+    //     cout << endl;
+    // }
+    // else{
+    //     cout << "Iveskite pirma skaiciu, kuri norite padauginti: "; cin >> num1;
+    //     cout << "Iveskite antra skaiciu kuri norite padauginti: "; cin >> num2;
+    // }
+
+    for(int i = 0;i<100;i++){
+        num1 = random_number(4);
+        num2 = random_number(4);
+        cout << num1 << " * " << num2 << endl;
+        res = dup_big_int(num1,num2);
+
+        if(toInt(num1)*toInt(num2) != toInt(res)){
+            cout << "Haha nice one bro!" << endl;
+            cout << "Wrong res: " << toInt(res) << endl;
+            cout << "Real res: " << toInt(num1)*toInt(num2);
+            break;
+        }
     }
-    else{
-        cout << "Iveskite pirma skaiciu, kuri norite padauginti: "; cin >> num1;
-        cout << "Iveskite antra skaiciu kuri norite padauginti: "; cin >> num2;
-    }
+    
+    // res = dup_big_int(num1,num2);
 
-    res = dup_big_int(num1,num2);
-
-    cout << "Rezultatas: " << res << endl;
+    // cout << "Rezultatas: " << res << endl;
 
 
     return 0;
