@@ -26,7 +26,11 @@ int g(int sk_k, vector<int> skai_arr, string txt){
 
 int main()
 {
-    g(10,{0,1,2,3,4},"");
+    g(3,{0,1,2,3,4},""); //sugeneruoja visus sk_k skaitmenu skaicius kuriuos galima padaryti is skai_arr skaitmenu
+
+    for(int i = 0;i<all_num.size();i++){
+        cout << all_num[i] << endl;
+    }
 
     cout << "\n\n" << "Skaiciu kiekis: " << all_num.size() << endl;
 
