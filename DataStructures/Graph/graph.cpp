@@ -43,7 +43,131 @@ struct Node{
     }
 };
 
+Node* NULL_NODE = new Node(0);
+
 struct Graph{
+
+    struct PriorityQueue2{
+        private: 
+
+        vector<Node*> heap_arr;
+        int heap_size = 0;
+
+        Node* left(int i){
+            if((i*2)+1 < heap_size){
+                return heap_arr[(i*2)+1];
+            }
+            else{
+                return NULL_NODE;
+            }
+        }
+
+        Node* right(int i){
+            if((i*2)+2 < heap_size && (i*2)+2 >= 0){
+                return heap_arr[(i*2)+2];
+            }
+            else{
+                return NULL_NODE;
+            }
+        }
+
+        Node* parent(int i){
+            if((i-1)/2 < heap_size && (i-1)/2 >= 0){
+                return heap_arr[(i-1)/2];
+            } 
+            else{
+                return NULL_NODE;
+            }
+        }
+
+        int getParentIndex(int i){
+            if((i-1)/2 < heap_size && (i-1)/2 >= 0){
+                return (i-1)/2;
+            } 
+            else{
+                return -1;
+            }
+        }
+
+        void swap(int a, int b){
+            Node* save = heap_arr[a];
+            heap_arr[a] = heap_arr[b];
+            heap_arr[b] = save; 
+        }
+
+        void heapify(){
+            for(int i = heap_size-1;i>=0;i--){
+                if(parent(i)->shortest_path_val > heap_arr[i]->shortest_path_val && parent(i) != NULL_NODE){
+                    swap(getParentIndex(i), i);
+                }
+            }
+        }
+
+        public:
+
+        void printQueue(){
+            cout << "Current queue status: ";
+            for(int i = 0;i<heap_size;i++){
+                cout << heap_arr[i]->shortest_path_val << " ";
+            }
+            cout << endl;
+        }
+
+        bool isEmpty(){
+            return heap_size <= 0;
+        }
+
+        void addNode(Node* node){
+            if(heap_arr.size() > heap_size){
+                heap_arr[heap_size] = node; 
+            }
+            else{
+                heap_arr.push_back(node);
+            }
+            
+            heap_size++;
+            heapify();
+        }
+
+        bool inQueue(Node* node){
+            for(int i = heap_size-1;i>=0;i--){
+                if(heap_arr[i] == node){
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        Node* dequeue(){
+            if(heap_size == 1){
+                heap_size--;
+                return heap_arr[0];
+            }
+            else if(heap_size == 0){
+                return NULL_NODE;
+            }
+
+            Node* save = heap_arr[0];
+            heap_arr[0] = heap_arr[heap_size-1];
+            heap_size--;
+
+            heapify();
+
+            return save;
+        }
+
+        void updateNode(Node* node){
+            for(int i = heap_size-1;i>=0;i--){
+                if(heap_arr[i] == node){
+                    heap_arr[i] = node;
+                    break;
+                }
+            }
+
+            heapify();
+        }
+    };
 
     struct PriorityQueue{
 
@@ -210,7 +334,7 @@ struct Graph{
         }
     }
 
-    PriorityQueue priority_queue;
+    PriorityQueue2 priority_queue;
     vector<Node*> visited_nodes;
 
     bool haveVisited(Node* node){
@@ -241,7 +365,6 @@ struct Graph{
             if(cur_node->shortest_path_val > range + start->getPathValue(i) || cur_node->shortest_path_val == -1){
                 cur_node->shortest_path_val = range + start->getPathValue(i);
                 priority_queue.updateNode(cur_node);
-                //update priority queue
             }
 
             //JEI NEAPLANKEME SITO KAIMYNINIO NODE PRIDEDAME JI I QUEUE

@@ -25,6 +25,12 @@ void generateLPSarray(vector<int>& lps_arr, const string& pat){
             }
         }
     }
+
+    for(int i = 0;i<lps_arr.size();i++){
+        cout << lps_arr[i] << " ";
+    }
+    
+    cout << endl;
 }
 
 void KMPsearch(const string& txt, const string& pat){
@@ -57,5 +63,5 @@ void KMPsearch(const string& txt, const string& pat){
 }
 
 int main(){
-    KMPsearch("mammamam","mam");
+    KMPsearch("mammamam","masmasssssss");
 }
