@@ -14,7 +14,7 @@ int countRuntime(void *(func())){
 
     auto duration = duration_cast<microseconds>(stop - start);
 
-    cout << duration.count() << endl;
+    cout << "Duration: " << duration.count() << endl;
 }
 
 int main(void *(func())){
