@@ -4,21 +4,21 @@ using namespace std;
 
 struct Node{
     int num;
+    int ikrovimas;
     int best_time = -1;
-    int elek_kiekis;
-    vector<Node*> keliai;
-    bool removable;
+    int degalu_kiekis = 0;
+    vector<Node*> kaimynai;
+    Node* best_kaimynas;
+    Node* prev_node;
 
-    Node(int n, int abest_time = -1, int aelek_kiekis = 0, vector<Node*> akeliai = {}, bool aremovable = false){
-        num = n;
-        int best_time = abest_time;
-        int elek_kiekis = aelek_kiekis;
-        vector<Node*> keliai = akeliai;
-        removable = aremovable;
+    bool inQueue = false;
+
+    void pridetiKaimyna(Node* miestas){
+        kaimynai.push_back(miestas);
     }
 };
 
-Node* NULL_NODE = new Node(0);
+Node* NULL_NODE = new Node();
 
 struct PriorityQueue{
     vector<Node*> heap_arr;
@@ -177,201 +177,199 @@ struct PriorityQueue{
     }
 };
 
-struct Graph{
-
-    PriorityQueue pq;
-    Node* baig_m;
-    vector<int> miestu_ikrova;
-    int energijos_naud;
-    int max_talpa;
-
-    Graph(Node* abaig, const vector<int>& amiestu_ikrova, int aenergijos_naud, int amax_talpa){
-        baig_m = abaig;
-        miestu_ikrova = amiestu_ikrova;
-        energijos_naud = aenergijos_naud;
-        max_talpa = amax_talpa;
-    }
-
-    struct LinkedList{
-        int num = -1;
-        LinkedList* next;
-
-        LinkedList(int anum = -1, LinkedList* anext = NULL){
-            num = anum;
-            next = anext;
-        }
-    };
-
-    int hash_num = 10000;
-    LinkedList aplankyti[10000];
-
-    void addVisited(Node* node){
-        if(aplankyti[node->num%hash_num].num == -1){
-            LinkedList ll(node->num);
-            aplankyti[node->num%hash_num] = ll;
-        }
-        else{
-            LinkedList* cur = &aplankyti[node->num%hash_num];
-            while(true){
-                if(cur->next == NULL){
-                    cur->next = new LinkedList(node->num);
-                    break;
-                }
-                else{
-                    cur = cur->next;
-                }
-            }
-        }
-    }
-
-    bool IsVisited(int num){
-        if(aplankyti[num%hash_num].num == -1){
-            return false;
-        }
-        else{
-            LinkedList* cur = &aplankyti[num%hash_num];
-
-            while(true){
-                if(cur->num == num){
-                    return true;
-                }
-                else if(cur->next != NULL){
-                    cur = cur->next;
-                }
-                else{
-                    return false;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    //PADARYTI:
-    //PABANDYTI PAOPTIMIZINTI HEAPIFY FUNKCIJA - DONE
-    //addToPq degal - NEREIKIA TAISYT
-    //isVisited ar tikrai taip turi veikt
-
-    void addToPq(Node* dab_m, Node* node, int laikas, int elek_kiekis){
-
-        //JEIGU NERA PAKROVIMO STOTELES JEI GALI VAZIUOJA I KITA MIESTA
-
-        if(miestu_ikrova[dab_m->num-1] == 0){
-            if(elek_kiekis >= energijos_naud){
-                Node* miestas = new Node(*node);
-                miestas->best_time = laikas+1;
-                miestas->elek_kiekis = elek_kiekis-energijos_naud;
-                miestas->removable = true;
-
-                pq.push(miestas);
-            }
-
-            return;
-        }
-
-        if(elek_kiekis >= energijos_naud){
-            Node* miestas = new Node(*node);
-            miestas->best_time = laikas+1;
-            miestas->elek_kiekis = elek_kiekis-energijos_naud;
-            miestas->removable = true;
-
-            pq.push(miestas);
-        }
-
-        while(true){
-            if(elek_kiekis >= max_talpa){
-                break;
-            }
-
-            laikas++;
-            elek_kiekis += miestu_ikrova[dab_m->num-1];
-
-            if(elek_kiekis > max_talpa){
-                elek_kiekis = max_talpa;
-            }
-
-            if(elek_kiekis >= energijos_naud){
-                Node* miestas = new Node(*node);
-                miestas->best_time = laikas+1;
-                miestas->elek_kiekis = elek_kiekis-energijos_naud;
-                miestas->removable = true;
-
-                pq.push(miestas);
-            }
-        }
-    }
-
-    int findBestTime(Node* dab_m, int laikas = 0, int elek_kiekis = 0){
-
-        //cout << "Dabartinis miestas: " << dab_m->num << endl;
-        //cout << dab_m << endl;
-
-        if(dab_m->num == baig_m->num){
-            return laikas;
-        }
-
-        addVisited(dab_m);
-
-        for(int i = 0;i<dab_m->keliai.size();i++){
-            Node* kaimynas = dab_m->keliai[i];
-
-            if(!IsVisited(kaimynas->num)){
-                addToPq(dab_m, kaimynas, laikas, elek_kiekis);
-            }
-        }
-
-        if(dab_m->removable){
-            //cout << "Allocating memory" << endl;
-            delete dab_m;
-        }
-        //delete dab_m;
-
-        if(pq.isEmpty()){
-            return -1;
-        }
-        else{
-            Node* kitas_miestas = pq.pop();
-            //cout << "kitas miestas: " << kitas_miestas->num << endl;
-            
-            return findBestTime(kitas_miestas, kitas_miestas->best_time, kitas_miestas->elek_kiekis);
-        }
-    }
+struct Masina{
+    int talpa;
+    int elek_naudojimas;
+    int degalu_kiekis;
 };
 
+int countChargeTime(const Masina* masina, const Node* dab_miestas){
+    int laikas = 0;
 
+    int degalu_kiekis = masina->degalu_kiekis;
+    int talpa = masina->talpa;
+    int elek_naudojimas = masina->elek_naudojimas;
+
+    int krovimas = dab_miestas->ikrovimas;
+
+    while(elek_naudojimas > degalu_kiekis){
+        laikas++;
+        degalu_kiekis += krovimas;
+
+        if(degalu_kiekis > talpa){
+            degalu_kiekis = talpa;
+        }
+    }
+
+    return laikas;
+}
+
+int findBestPath(PriorityQueue* pq, Node* cur_node, const Node* end_node, Masina* masina, int cur_time = 0){
+    if(cur_node == end_node){
+        return cur_time;
+    }
+
+    for(int i = 0;i<cur_node->kaimynai.size();i++){
+        Node* kaimynas = cur_node->kaimynai[i];
+
+        //NUKELIAVIMO LAIKAS (1H) + KROVIMO LAIKAS
+
+        int charge_time = countChargeTime(masina, cur_node);
+        //cout << charge_time << endl;
+        int new_time = cur_time + charge_time + 1;
+        //cout << new_time << endl;
+
+        if(kaimynas->best_time == -1 || kaimynas->best_time > new_time){
+            kaimynas->prev_node = cur_node;
+            kaimynas->best_time = new_time;
+            kaimynas->degalu_kiekis = cur_node->ikrovimas*charge_time + masina->degalu_kiekis - masina->elek_naudojimas;
+        }
+
+        if(!kaimynas->inQueue){
+            kaimynas->inQueue = true;
+            pq->push(kaimynas);
+        }
+    }
+
+    if(pq->isEmpty()){
+        return -1;
+    }
+
+    Node* naujas_miestas = pq->pop();
+    
+    masina->degalu_kiekis = naujas_miestas->degalu_kiekis;
+
+    return findBestPath(pq, naujas_miestas, end_node, masina, naujas_miestas->best_time);
+}
+
+int chargeTill(Masina* masina, double krovimas, int min_deg){
+    double pilti_degalu = min_deg - masina->degalu_kiekis;
+
+    if(pilti_degalu <= 0){
+        return 0;
+    }
+    else{
+        int krovimo_laikas = ceil(pilti_degalu / krovimas);
+        masina->degalu_kiekis += krovimas * krovimo_laikas;
+
+        if(masina->degalu_kiekis > masina->talpa){
+            masina->degalu_kiekis = masina->talpa;
+        }
+
+        return krovimo_laikas;
+    }
+}
+
+void initialize(const Node* prad_miestas, Node* pab_miestas){
+    if(prad_miestas == pab_miestas){
+        return;
+    }
+    else{
+        pab_miestas->prev_node->best_kaimynas = pab_miestas;
+        return initialize(prad_miestas, pab_miestas->prev_node);
+    }
+}
+
+int findBestTime(Node* dab_miestas, const Node* pab_miestas, Masina* masina, int laikas = 0){
+    if(dab_miestas == pab_miestas){
+        return laikas;
+    }
+
+    int max_degalai = masina->talpa;
+    int deg_naudojimas = masina->elek_naudojimas;
+
+    Node* miestas = dab_miestas->best_kaimynas;
+    max_degalai -= deg_naudojimas;
+
+    int atstumas = 1;
+
+    //IESKO MIESTO KURIAME IKROVIMAS BUTU GREITESNIS
+    //KAI JI RANDA, PRIPILDO DEGALU KAD UZTEKTU IKI JO
+    //NUVAZIUOTI
+
+    Node* best_miestas = miestas;
+    int best_miestas_deg = deg_naudojimas;
+    int best_miestas_ats = 1;
+
+    while(max_degalai >= deg_naudojimas){
+        if(miestas->ikrovimas > dab_miestas->ikrovimas || miestas == pab_miestas){
+            int krovimo_laikas = chargeTill(masina, dab_miestas->ikrovimas, masina->talpa - max_degalai);
+            int naujas_laikas = laikas + atstumas + krovimo_laikas; 
+
+            masina->degalu_kiekis -= atstumas * deg_naudojimas;
+
+            return findBestTime(miestas, pab_miestas, masina, naujas_laikas);
+        }
+
+        if(best_miestas->ikrovimas < miestas->ikrovimas){
+            best_miestas = miestas;
+            best_miestas_deg = masina->talpa - max_degalai;
+            best_miestas_ats = atstumas;
+        }
+
+        max_degalai -= deg_naudojimas;
+        miestas = miestas->best_kaimynas;
+        atstumas++;
+    }
+
+    //JEIGU NERADO GREITESNIO IKROVIMO, VADINASI
+    //REIKIA KELIAUTI IKI VISTIEK GREICIAUSIO
+
+    int krovimo_laikas = chargeTill(masina, dab_miestas->ikrovimas, best_miestas_deg);
+
+    masina->degalu_kiekis -= best_miestas_ats * deg_naudojimas;
+
+    return findBestTime(best_miestas, pab_miestas, masina, laikas + best_miestas_ats + krovimo_laikas);
+}
 
 int main(){ 
-    int miestu_sk,keliu_sk,talpa,elek_sunaud;
+    ifstream read_file("test6.in");
+    ofstream write_file("nice.txt");
 
-    ifstream read_file("test.txt");
+    int miestu_sk, keliu_sk, talpa, elek_sunaud;
 
     read_file >> miestu_sk >> keliu_sk >> talpa >> elek_sunaud;
 
-    vector<int> miestu_pakrovimas;
+    int ikrovimas;
     vector<Node*> visi_miestai;
 
     for(int i = 0;i<miestu_sk;i++){
-        int n;
+        read_file >> ikrovimas;
 
-        read_file >> n;
+        Node* miestas = new Node();
+        miestas->ikrovimas = ikrovimas;
+        miestas->num = i;
 
-        miestu_pakrovimas.push_back(n);
-        visi_miestai.push_back(new Node(i+1));
-        //cout << visi_miestai[i]->num << endl;
+        visi_miestai.push_back(miestas);
     }
+
+    int a,b; //miestas a ir b
 
     for(int i = 0;i<keliu_sk;i++){
-        int a,b;
-
         read_file >> a >> b;
-        visi_miestai[a-1]->keliai.push_back(visi_miestai[b-1]);
-        visi_miestai[b-1]->keliai.push_back(visi_miestai[a-1]);
+
+        visi_miestai[a-1]->pridetiKaimyna(visi_miestai[b-1]);
+        visi_miestai[b-1]->pridetiKaimyna(visi_miestai[a-1]);
     }
 
-    PriorityQueue pq;
-    Graph graph(visi_miestai[miestu_sk-1], miestu_pakrovimas, elek_sunaud, talpa);
+    PriorityQueue* pq = new PriorityQueue();
+    Masina* masina = new Masina();
 
-    ofstream write_file("ats.txt");
+    masina->degalu_kiekis = 0;
+    masina->elek_naudojimas = elek_sunaud;
+    masina->talpa = talpa;
 
-    write_file << graph.findBestTime(visi_miestai[0]);
+    int res = findBestPath(pq, visi_miestai[0], visi_miestai[visi_miestai.size()-1], masina);
+
+    if(res != -1){
+        masina->degalu_kiekis = 0;
+        initialize(visi_miestai[0], visi_miestai[visi_miestai.size()-1]);
+
+        write_file << findBestTime(visi_miestai[0], visi_miestai[visi_miestai.size()-1], masina);
+    }
+    else{
+        write_file << -1;
+    }
+
+    
 }
