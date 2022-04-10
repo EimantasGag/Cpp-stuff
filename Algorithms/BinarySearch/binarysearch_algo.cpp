@@ -4,7 +4,6 @@ using namespace std;
 
 bool binarySearch(int findNum, vector<int>& arr, int s = -1, int e = -1){
     if(e == -1){
-        sort(arr.begin(), arr.end(), [](int a, int b){ return a < b; });
         return binarySearch(findNum, arr, 0, arr.size()-1);
     }
     else{
@@ -30,6 +29,37 @@ bool binarySearch(int findNum, vector<int>& arr, int s = -1, int e = -1){
     }
 }
 
+bool BS(const vector<int>& nums, const int& num, int left = 0){
+    //int left = customLeft;
+    int right = nums.size()-1;
+    int mid;
+
+    if(nums[left] == num){
+        return true;
+    }
+    if(nums[right] == num){
+        return true;
+    }
+
+    while(left < right-1){
+        //cout << left << " " << right << endl;
+        mid = left + (right-left) / 2;
+
+        if(nums[mid] > num){ 
+            right = mid;
+        }
+        else{
+            left = mid;
+        }
+
+        if(nums[mid] == num){
+            return true;
+        }
+    }
+
+    return false;
+}
+
 bool findIt(int num, const vector<int> nums){
     for(int n: nums){
         if(n == num){
@@ -40,20 +70,37 @@ bool findIt(int num, const vector<int> nums){
     return false;
 }
 
+vector<int> printList(const vector<int>& arr){
+    for(int i: arr){
+        cout << i << " ";
+    }
+    cout << endl;
+}
+
 void TestLoop(int test_number = 1){
     vector<int> nums;
 
     for(int i = 0;i<100;i++){
-        int num = rand() % 100;
+        int num = rand() % 1000;
         nums.push_back(num);
     }
 
-    int sear = rand() % 100;
+    sort(nums.begin(), nums.end());
+
+    int findNum = rand() % 1000;
+
+    //printList(nums);
+    // cout << "Searching for: " << findNum << endl;
+    // cout << BS(nums, findNum) << endl;
+    // cout << findIt(findNum, nums) << endl;
 
     cout << "Test " << test_number << " runinng..." << endl;
 
-    if(binarySearch(sear, nums) == findIt(sear, nums)){
+    if(BS(nums, findNum) == findIt(findNum, nums)){
         cout << "Test " << test_number << " passed!" << endl;
+        if(test_number > 10000){
+            return;
+        }
         return TestLoop(++test_number);
     }
     else{

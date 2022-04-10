@@ -23,7 +23,7 @@ string getSecondWord(int index, const map<string, string>& all_words){
 }
 
 int main(){
-    ifstream read_file("zodziai2.txt");
+    ifstream read_file("zodziai3.txt");
 
     string word, prev_word;
     map<string, string> all_words;

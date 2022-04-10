@@ -2,10 +2,12 @@
 
 using namespace std;
 
-void func(){
-    throw 404;
-}
+struct Nice{
+    int val = 1528349827;
+    Nice* ptr;
+};
 
 int main(){
-    func();
+    Nice nice;
+    cout << nice.val << endl;
 }

@@ -2,20 +2,17 @@
 
 using namespace std;
 
-void func(int arr[5][2]){
-    arr[0][0] = 0;
-}
+static const vector<int> nice = {10,5};
 
 int main(){
-    int arr[5][2] = {{1,2},{3,4},{5,6},{7,8},{9,10}};
-    int** l = arr;
-    func(arr);
+    int box = 0;
+    int nice[9][9] = {};
 
-    for(int i = 0;i<5;i++){
-        for(int x = 0;x<2;x++){
-            cout << arr[i][x] << " ";
+    for(int i = 0;i<9;i++){
+        for(int x = 0;x<9;x++){
+            cout << nice[i][x] << endl;
         }
-        cout << endl;
     }
-    cout << endl;
+    
+
 }

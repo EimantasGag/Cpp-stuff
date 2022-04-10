@@ -1,5 +1,0 @@
-- Dijikastra algorithma pabaigti arba paziureti implementation algorithmo
-- Hashing implementation padaryti
-- A* star algorithma paziureti
-- KMP algorithma suprasti iki galo
-- Patestuoti laiko complexiti tarp vector.remove() ir LinkedList removinima
