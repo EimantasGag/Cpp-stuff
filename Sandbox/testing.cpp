@@ -1,18 +1,13 @@
 #include <bits/stdc++.h>
-
-using namespace std;
-
-static const vector<int> nice = {10,5};
+#include <fstream>
 
 int main(){
-    int box = 0;
-    int nice[9][9] = {};
-
-    for(int i = 0;i<9;i++){
-        for(int x = 0;x<9;x++){
-            cout << nice[i][x] << endl;
-        }
-    }
-    
-
+    std::ifstream read("text.txt");
+    int n;
+    read >> n;
+    std::cout << n << std::endl;;
+    char name[21];
+    read.ignore();  
+    read.get(name, 21);
+    std::cout << name << std::endl;
 }
